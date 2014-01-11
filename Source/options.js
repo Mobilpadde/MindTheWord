@@ -249,6 +249,7 @@ function options() {
     var ls = { // localStorage
       "blacklist"               : "(stackoverflow.com|github.com|code.google.com)",
       "activation"              : "true",
+      "showOrigin"              : "false",
       "savedPatterns"           : JSON.stringify([[["en","English"],["ru","Russian"],"15",true], [["da","Danish"],["en","English"],"15",false]]),
       "sourceLanguage"          : "en",
       "targetLanguage"          : "ru",

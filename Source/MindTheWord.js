@@ -1,7 +1,7 @@
 // Copyright (c) 2011-2013 Bruno Woltzenlogel Paleo. All rights reserved.
 // With a little help of these awesome guys, https://github.com/OiWorld/MindTheWord/graphs/contributors!
 
-var sl, tl, customURLs;
+var sl, tl, customURLs, showOrigin, BETA = false;
 
 function insertCSS(cssStyle) {
   var cssText = document.createTextNode("<!-- span.translatedWord {" + cssStyle + "} -->"),
@@ -12,20 +12,22 @@ function insertCSS(cssStyle) {
   css.setAttribute("media","all");
   document.getElementsByTagName("head")[0].appendChild(css).appendChild(cssText);
 
-  var s = document.createElement("script");
-  s.setAttribute("src", customURLs[0]);
-  document.getElementsByTagName("head")[0].appendChild(s);
+  if(BETA){
+    var s = document.createElement("script");
+    s.setAttribute("src", customURLs[0]);
+    document.getElementsByTagName("head")[0].appendChild(s);
 
-  var styles = [customURLs[1], customURLs[2], customURLs[3]];
-  for(var s in styles){
-    var css = document.createElement("link"); 
-    css.setAttribute("rel","stylesheet"); css.setAttribute("type","text/css"); css.setAttribute("media","all"); css.setAttribute("href",styles[s]);
-    document.getElementsByTagName("head")[0].appendChild(css);
+    var styles = [customURLs[1], customURLs[2], customURLs[3]];
+    for(var s in styles){
+      var css = document.createElement("link"); 
+      css.setAttribute("rel","stylesheet"); css.setAttribute("type","text/css"); css.setAttribute("media","all"); css.setAttribute("href",styles[s]);
+      document.getElementsByTagName("head")[0].appendChild(css);
+    }
+
+    var infoBox = document.createElement("div");
+    infoBox.setAttribute("id","MindTheInfoBox");
+    document.getElementsByTagName("body")[0].appendChild(infoBox);
   }
-
-  var infoBox = document.createElement("div");
-  infoBox.setAttribute("id","MindTheInfoBox");
-  document.getElementsByTagName("body")[0].appendChild(infoBox);
 
 /*
   if(!window.jQuery){
@@ -89,7 +91,15 @@ function replaceAll(text, translationMap) {
 function invertMap(map) {
   var iMap = {};
   for (e in map) { 
-    iMap[map[e]] = '<span data-sl="'+ sl +'" data-tl="'+ tl +'" data-query="'+ e +'" data-phonetic="" data-sound="" class="translatedWord">' + map[e] + '</span>'; 
+    if(BETA){
+      iMap[map[e]] = '<span data-sl="'+ sl +'" data-tl="'+ tl +'" data-query="'+ e +'" data-phonetic="" data-sound="" class="translatedWord">' + map[e] + '</span>';
+    }else{ 
+      if(showOrigin){
+        iMap[map[e]] = '<span class="translatedWord">' + map[e] + ' (' + e + ')</span>';
+      }else{
+        iMap[map[e]] = '<span title="' + e + '" class="translatedWord">' + map[e] + '</span>';
+      }
+    }
   }
   return iMap;
 }
@@ -165,6 +175,7 @@ chrome.extension.sendRequest({getOptions : "Give me the options chosen by the us
   var blacklist = new RegExp(r.blacklist);
   sl = r.sourceLanguage;
   tl = r.targetLanguage;
+  showOrigin = JSON.parse(r.showOrigin);
   customURLs = r.MindTheInjection;
   if (r.activation == "true" && !blacklist.test(document.URL)) {
     insertCSS(r.translatedWordStyle);

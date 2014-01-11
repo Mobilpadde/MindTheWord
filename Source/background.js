@@ -2,6 +2,7 @@ function initializeLocalStorage() {
   if(localStorage["activation"] == null){
     localStorage["blacklist"]               = "(stackoverflow.com|github.com|code.google.com)";
     localStorage["activation"]              = "true";
+    localStorage["showOrigin"]              = "false";
     localStorage["savedPatterns"]           = JSON.stringify([[["en","English"],["it","Italian"],"15",true], [["en","English"],["la","Latin"],"15",false]]);
     localStorage["sourceLanguage"]          = "en";
     localStorage["targetLanguage"]          = "it";
@@ -94,15 +95,16 @@ function onRequest(request, sender, sendResponse) {
     });
     console.log(length(request.wordsToBeTranslated));
   } else if (request.getOptions) {
-    sendResponse({translationProbability    : S("translationProbability"),
-                  minimumSourceWordLength   : S("minimumSourceWordLength"),
-                  translatedWordStyle       : S("translatedWordStyle"),
+    sendResponse({minimumSourceWordLength   : S("minimumSourceWordLength"),
                   userDefinedTranslations   : S("userDefinedTranslations"),
+                  translationProbability    : S("translationProbability"),
                   userBlacklistedWords      : S("userBlacklistedWords"),
-                  activation                : S("activation"),
-                  blacklist                 : S("blacklist"),
+                  translatedWordStyle       : S("translatedWordStyle"),
                   sourceLanguage            : S("sourceLanguage"),
                   targetLanguage            : S("targetLanguage"),
+                  activation                : S("activation"),
+                  showOrigin                : S("showOrigin"),
+                  blacklist                 : S("blacklist"),
                   MindTheInjection          : [
                                                 chrome.extension.getURL("/assets/js/mtw.js"), 
                                                 chrome.extension.getURL("/assets/css/mtw.css"),

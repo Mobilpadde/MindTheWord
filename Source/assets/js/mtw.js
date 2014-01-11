@@ -13,7 +13,7 @@ window.onload = function(){
 
 	var interval;
     function infoMe(){
-    	clearInterval(interval);
+		clearInterval(interval);
 		var _this = this,
 			offset = getPos(_this),
     		infoBox = document.getElementById("MindTheInfoBox"),
